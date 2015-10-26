@@ -129,7 +129,7 @@ public class CheckRunnerTest {
         targetValues.put("target", Optional.of(value));
         when(mockTargetChecker.check(mockCheck)).thenReturn(targetValues);
         when(mockAlertsStore.getLastAlertForTargetOfCheck("target", "id")).thenReturn(null);
-        when(mockValueChecker.checkValue(value, warn, error)).thenReturn(AlertType.OK);
+        when(mockValueChecker.checkValue(value, warn, error, lastState)).thenReturn(AlertType.OK);
         checkRunner.run();
     }
     
@@ -149,7 +149,7 @@ public class CheckRunnerTest {
         targetValues.put("target", Optional.of(value));
         when(mockTargetChecker.check(mockCheck)).thenReturn(targetValues);
         when(mockAlertsStore.getLastAlertForTargetOfCheck("target", "id")).thenReturn(new Alert().withToType(AlertType.WARN));
-        when(mockValueChecker.checkValue(value, warn, error)).thenReturn(AlertType.WARN);
+        when(mockValueChecker.checkValue(value, warn, error, lastState)).thenReturn(AlertType.WARN);
         
         Alert alert = new Alert();
         
@@ -179,7 +179,7 @@ public class CheckRunnerTest {
         targetValues.put("target", Optional.of(value));
         when(mockTargetChecker.check(mockCheck)).thenReturn(targetValues);
         when(mockAlertsStore.getLastAlertForTargetOfCheck("target", "id")).thenReturn(new Alert().withToType(AlertType.WARN));
-        when(mockValueChecker.checkValue(value, warn, error)).thenReturn(AlertType.ERROR);
+        when(mockValueChecker.checkValue(value, warn, error, lastState)).thenReturn(AlertType.ERROR);
         
         Alert alert = new Alert();
         
@@ -212,7 +212,7 @@ public class CheckRunnerTest {
         targetValues.put("target", Optional.of(value));
         when(mockTargetChecker.check(mockCheck)).thenReturn(targetValues);
         when(mockAlertsStore.getLastAlertForTargetOfCheck("target", "id")).thenReturn(new Alert().withToType(AlertType.WARN));
-        when(mockValueChecker.checkValue(value, warn, error)).thenReturn(AlertType.ERROR);
+        when(mockValueChecker.checkValue(value, warn, error, lastState)).thenReturn(AlertType.ERROR);
         
         Alert alert = new Alert();
         
@@ -246,7 +246,7 @@ public class CheckRunnerTest {
         targetValues.put("target", Optional.of(value));
         when(mockTargetChecker.check(mockCheck)).thenReturn(targetValues);
         when(mockAlertsStore.getLastAlertForTargetOfCheck("target", "id")).thenReturn(new Alert().withToType(AlertType.WARN));
-        when(mockValueChecker.checkValue(value, warn, error)).thenReturn(AlertType.ERROR);
+        when(mockValueChecker.checkValue(value, warn, error, lastState)).thenReturn(AlertType.ERROR);
         
         Alert alert = new Alert();
         
@@ -281,7 +281,7 @@ public class CheckRunnerTest {
         targetValues.put("target", Optional.of(value));
         when(mockTargetChecker.check(mockCheck)).thenReturn(targetValues);
         when(mockAlertsStore.getLastAlertForTargetOfCheck("target", "id")).thenReturn(new Alert().withToType(AlertType.WARN));
-        when(mockValueChecker.checkValue(value, warn, error)).thenReturn(AlertType.ERROR);
+        when(mockValueChecker.checkValue(value, warn, error, lastState)).thenReturn(AlertType.ERROR);
         
         Alert alert = new Alert();
         
@@ -316,7 +316,7 @@ public class CheckRunnerTest {
         targetValues.put("target", Optional.of(value));
         when(mockTargetChecker.check(mockCheck)).thenReturn(targetValues);
         when(mockAlertsStore.getLastAlertForTargetOfCheck("target", "id")).thenReturn(new Alert().withToType(AlertType.WARN));
-        when(mockValueChecker.checkValue(value, warn, error)).thenReturn(AlertType.ERROR);
+        when(mockValueChecker.checkValue(value, warn, error, lastState)).thenReturn(AlertType.ERROR);
         
         Alert alert = new Alert();
         
