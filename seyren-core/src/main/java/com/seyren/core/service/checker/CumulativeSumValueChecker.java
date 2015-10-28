@@ -34,7 +34,37 @@ public class CumulativeSumValueChecker implements ValueChecker {
     public Alert checkValue(BigDecimal value, Check check, String target, AlertType lastState) {
 
         CheckState checkState = checkStateMap.get(target);
-        AlertType alertType =  AlertType.OK;
+        AlertType changePointAlert = detectChangePoint(value, target, checkState);
+        AlertType outlierAlert = detectOutlier(value.doubleValue(), checkState);
+
+        AlertType alertType = changePointAlert.isWorseThan(outlierAlert) ? changePointAlert : outlierAlert;
+
+        return createAlert(target, value, check.getWarn(), check.getError(), lastState, alertType, DateTime.now());
+    }
+
+    private AlertType detectOutlier(double value, CheckState checkState) {
+        double meanRate = checkState.getHistogram().getSnapshot().getMean();
+        double stdDev = checkState.getHistogram().getSnapshot().getStdDev();
+        final double alpha = getChangeAlpha(meanRate, stdDev);
+        if((value > (meanRate + alpha*stdDev)) || (value < (meanRate - alpha*stdDev))) {
+            return AlertType.ERROR;
+        }
+        return  AlertType.OK;
+    }
+
+    protected double getChangeAlpha(double meanRate, double stdDev) {
+        final double alpha = (meanRate / (stdDev + 0.0001d));
+        if (alpha >= 3d) {
+            return 3d;
+        } else if (alpha >= 1d) {
+            return (3d-alpha) + 3d;
+        } else {
+            return (1d/alpha) + (3d-alpha) + 3d;
+        }
+    }
+
+    private AlertType detectChangePoint(BigDecimal value, String target, CheckState checkState) {
+
         double doubleValue = value.doubleValue();
         double lambda = 3*checkState.getMean();
         long count = checkState.getCount()+1;
@@ -45,18 +75,14 @@ public class CumulativeSumValueChecker implements ValueChecker {
         if (count > checkState.getMinCount()) {
 
             if (posSum > lambda || negSum < (-1d) * lambda) {
-                count = 0;
-                mean = 0d;
-                posSum = 0d;
-                negSum = 0d;
-                checkStateMap.replace(target, new CheckState(defaultMinCount, 0d, 0d, 0d, 0));
-                alertType = AlertType.ERROR;
+                checkStateMap.put(target, new CheckState(defaultMinCount, 0d, 0d, 0d, 0, checkState.getHistogram()));
+                return AlertType.ERROR;
             }
         }
-        checkStateMap.replace(target,new CheckState(defaultMinCount,mean,posSum,negSum,count));
-
-        return createAlert(target, value, check.getWarn(), check.getError(), lastState, alertType, DateTime.now());
+        checkStateMap.put(target,new CheckState(defaultMinCount,mean,posSum,negSum,count, checkState.getHistogram()));
+        return  AlertType.OK;
     }
+
     private Alert createAlert(String target, BigDecimal value, BigDecimal warn, BigDecimal error, AlertType from, AlertType to, DateTime now) {
         return new Alert()
                 .withTarget(target)
