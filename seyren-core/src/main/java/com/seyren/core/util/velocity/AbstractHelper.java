@@ -18,10 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Represents common denominator of {@link com.seyren.core.util.velocity.VelocityHttpHelper}
- * and {@link com.seyren.core.util.velocity.VelocityEmailHelper}.
- *
- * @author <a href="mailto:tobias.lindenmann@1und1.de">Tobias Lindenmann</a>
+ * Represents common denominator of {@link com.seyren.core.util.velocity.VelocityEmailHelper}.
  */
 class AbstractHelper {
     private static final ObjectMapper MAPPER = new ObjectMapper();
