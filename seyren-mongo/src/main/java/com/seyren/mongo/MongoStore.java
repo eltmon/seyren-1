@@ -275,6 +275,7 @@ public class MongoStore implements ChecksStore, AlertsStore, SubscriptionsStore,
         DBObject partialObject = object("name", check.getName())
                 .with("description", check.getDescription())
                 .with("target", check.getTarget())
+                .with("priority", check.getPriority().toString() != null ? check.getPriority().toString() : null)
                 .with("graphiteBaseUrl", check.getGraphiteBaseUrl())
                 .with("from", Strings.emptyToNull(check.getFrom()))
                 .with("until", Strings.emptyToNull(check.getUntil()))
