@@ -51,6 +51,9 @@
 
         $scope.create = function () {
             $("#createSubscriptionButton").addClass("disabled");
+               if ($scope.subscription.target === null){
+                    $scope.subscription.target = "None";
+                }
             Subscriptions.create({checkId: $scope.check.id}, $scope.subscription, function () {
                 $("#createSubscriptionButton").removeClass("disabled");
                 $("#editSubscriptionModal").modal("hide");
@@ -65,6 +68,9 @@
         };
 
         $scope.update = function () {
+            if ($scope.subscription.target === null){
+                $scope.subscription.target = "None";
+            }
             $("#updateSubscriptionButton").addClass("disabled");
             Subscriptions.update({checkId: $scope.check.id, subscriptionId: $scope.subscription.id}, $scope.subscription, function () {
                 $("#updateSubscriptionButton").removeClass("disabled");
